@@ -1024,6 +1024,19 @@ const StorageRow = ({ connectionName, allowNoDisk, storageSize, storageSizeUnit,
     );
 };
 
+const MachineTypeRow = ({ machineType, onValueChanged }) => {
+    return (
+        <FormGroup label={_("Machine Type")} fieldId="machine-type">
+            <FormSelect id="machine-type-select"
+                        value={machineType}
+                        onChange={(_, value) => onValueChanged('machineType', value)}>
+                <FormSelectOption value="pc" label={_("PC")} key="pc" />
+                <FormSelectOption value="q35" label={_("Q35")} key="q35" />
+            </FormSelect>
+        </FormGroup>
+    );
+};
+
 class CreateVmModal extends React.Component {
     static contextType = DialogsContext;
 
@@ -1052,6 +1065,7 @@ class CreateVmModal extends React.Component {
             ...getStorageDefaults(),
             storagePool: 'NewVolumeQCOW2',
             storageVolume: '',
+            machineType: '',
             startVm: true,
 
             // Unattended installation or cloud init options for cloud images
@@ -1177,6 +1191,9 @@ class CreateVmModal extends React.Component {
                 this.setState((prevState, prevProps) => ({ suggestedVmName: getVmName(value, prevProps.vms, prevState.os) }));
 
             break;
+        case 'machineType':
+            this.setState({ [key]: value });
+            break;
         case 'os': {
             const stateDelta = { [key]: value };
 
@@ -1251,6 +1268,7 @@ class CreateVmModal extends React.Component {
                 storageSize: convertToUnit(this.state.storageSize, this.state.storageSizeUnit, units.GiB),
                 storagePool: this.state.storagePool,
                 storageVolume: this.state.storageVolume,
+                machineType: this.state.machineType,
                 unattended: unattendedInstallation,
                 userPassword: this.state.userPassword,
                 rootPassword: this.state.rootPassword,
@@ -1372,6 +1390,10 @@ class CreateVmModal extends React.Component {
                     onValueChanged={this.onValueChanged}
                     validationFailed={validationFailed}
                     minimumMemory={this.state.minimumMemory}
+                />
+                <MachineTypeRow
+                    machineType={this.state.machineType}
+                    onValueChanged={this.onValueChanged}
                 />
             </>
         );
