@@ -250,6 +250,10 @@ def prepare_virt_install_params(args):
         if 'firmware' in args:
             params += ['--boot', args['firmware']]
 
+        # Machine
+        if 'machineType' in args:
+            params += ['--machine', args['machineType']]
+
         params += unattended_params
         params += cloud_init_params
 
