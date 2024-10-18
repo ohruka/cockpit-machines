@@ -1,0 +1,5 @@
+#!/bin/sh
+
+LOGFILE=`grep LOG-FILE /etc/libvirt/cockpit-machines-logging.conf | cut -d " " -f 3`
+
+busctl monitor org.libvirt.Domain > $LOGFILE
